@@ -9,6 +9,7 @@ Live usage quotas and context-window fill — right under your prompt.
 ![For Antigravity CLI](https://img.shields.io/badge/for-Antigravity%20CLI-111)
 ![Config: TOML](https://img.shields.io/badge/config-TOML-orange)
 ![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 ![agy-status-line screenshot](status_bar.png)
 
@@ -99,3 +100,7 @@ The quota group follows the active model: `gemini-*` quotas for Gemini models,
 > **Install note:** `install.sh` writes a `statusLine.command` block into
 > `~/.gemini/antigravity-cli/settings.json` — that's the mechanism users run.
 > `plugin.json` also declares a `hooks.statusLine` entry for plugin managers.
+
+## 📄 License
+
+[MIT](LICENSE) © Michael Komodromos

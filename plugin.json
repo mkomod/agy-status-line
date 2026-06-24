@@ -1,6 +1,7 @@
 {
   "name": "status-line",
   "version": "1.0.0",
+  "license": "MIT",
   "hooks": {
     "statusLine": "python3 status_line.py"
   }
