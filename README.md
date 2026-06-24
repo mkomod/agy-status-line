@@ -1,37 +1,43 @@
-# Status Line Plugin for Antigravity CLI
+<div align="center">
 
-A compact, configurable status line for the Antigravity CLI showing your usage
-quotas and context-window fill as colour-coded bars.
+# 🛰️ agy-status-line
 
-The Antigravity CLI pipes a JSON status payload to the status-line command on
-**stdin** for every render. This plugin reads that payload — it does not scrape
-local files.
+**A compact, configurable status line for the [Antigravity CLI](https://github.com/mkomod/agy-status-line).**
+Live usage quotas and context-window fill — right under your prompt.
 
-## Features
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
+![For Antigravity CLI](https://img.shields.io/badge/for-Antigravity%20CLI-111)
+![Config: TOML](https://img.shields.io/badge/config-TOML-orange)
+![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen)
 
-- **Usage Limits** — 5-hour and weekly quota bars (filling as you use them) with reset countdowns, for the active model group
-- **Context Window** — Bar showing how full the context window is
-- **Clock** — Optional current-time segment
-- **Configurable** — Toggle segments, pick colours, and tune the bar style via `config.toml`
-- **Responsive** — Wraps onto multiple lines when the terminal is too narrow
+![agy-status-line screenshot](status_bar.png)
 
-Example (wide terminal):
+</div>
 
-```
-5h: █░░░░░░░ 14% reset 3h 37m  |  7d: ░░░░░░░░ 2% reset 6d 22h  |  ctx: █░░░░░░░ 8%
-```
+---
 
-## Installation
+## ✨ Features
+
+- 📊 **Usage limits** — 5-hour and weekly quota bars that **fill as you use them**, with live reset countdowns
+- 🪟 **Context window** — see how full the model's context is at a glance
+- 🎨 **Fully themeable** — segments, colours, ANSI codes, and bar style all live in `config.toml`
+- 📐 **Responsive** — wraps onto multiple lines when the terminal is narrow
+- 🕒 **Optional extras** — toggle a clock (and more) on/off
+- 🪶 **Zero dependencies** — pure Python standard library
+
+## 🚀 Quick start
 
 ```bash
+git clone https://github.com/mkomod/agy-status-line.git
+cd agy-status-line
 bash install.sh
 ```
 
-This points your Antigravity CLI status line at `status_line.py`.
+Restart the Antigravity CLI and the status line appears under your prompt. That's it.
 
-## Configuration
+## ⚙️ Configuration
 
-All configuration lives in `config.toml` next to the script:
+Everything presentational lives in **`config.toml`** — no code changes needed.
 
 ```toml
 [modules]            # toggle segments on/off; this order is the render order
@@ -40,40 +46,56 @@ All configuration lives in `config.toml` next to the script:
 ctx = true           # context-window fill
 clock = false        # current time
 
-[colors]             # named: black, red, green, yellow, blue, magenta,
-bar = "green"        #        cyan, white, gray, dim, none
-value = "green"      # percentages and clock time
-label = "dim"        # labels, empty bar portion, reset countdowns
+[colors]             # role -> colour name (defined in [color_codes])
+bar = "green"
+value = "green"
+label = "dim"
 
 [display]
 bar_width = 8        # characters per bar
 separator = "  |  "  # text between segments
-fill_char = "█"      # filled bar character
-empty_char = "░"     # empty bar character
+fill_char = "█"
+empty_char = "░"
 fallback_width = 80  # assumed terminal width when the payload omits it
 
-[color_codes]        # colour name -> ANSI escape (use the  ESC escape)
-green = "[92m"
-dim   = "[2m"
-reset = "[0m"  # "reset" is required
+[color_codes]        # colour name -> ANSI escape
+green = "\u001b[92m"
+dim   = "\u001b[2m"
+reset = "\u001b[0m"  # required
 # ... red, yellow, blue, magenta, cyan, white, gray, black, none
 ```
 
-Every presentational value lives here — segments, colour roles, the ANSI codes
-themselves, and bar style. If `config.toml` is missing or a value is omitted,
-safe built-in fallbacks are used (uncoloured but functional).
+Missing the file or a value? Safe built-in fallbacks kick in (uncoloured but functional).
 
-## Project Structure
+### Make it yours
+
+| Want… | Change |
+| --- | --- |
+| A clock | `clock = true` |
+| Fewer segments | set any to `false` |
+| A different colour | point a role at another name, e.g. `bar = "cyan"` |
+| Chunkier bars | `bar_width = 12` |
+| ASCII-only bars | `fill_char = "#"`, `empty_char = "-"` |
+
+## 🧩 How it works
+
+The Antigravity CLI pipes a JSON status payload to its status-line command on
+**stdin** every render. `status_line.py` reads that payload — model, quotas,
+context window — and prints the bars. No file scraping, no background polling.
+
+The quota group follows the active model: `gemini-*` quotas for Gemini models,
+`3p-*` for Claude/GPT models.
+
+## 📦 Project structure
 
 ```
 .
-├── status_line.py   # The status line (reads stdin payload, renders bars)
-├── config.toml      # Segment / colour / display configuration
-├── install.sh       # Installation script
-└── plugin.json      # Plugin metadata
+├── status_line.py   # reads the stdin payload, renders the bars
+├── config.toml      # segments / colours / display
+├── install.sh       # one-shot installer
+└── plugin.json      # plugin metadata
 ```
 
-## Notes
-
-- The quota group shown follows the active model: `gemini-*` quotas for Gemini models, `3p-*` for Claude/GPT models.
-- **Install mechanisms:** `plugin.json` declares a `hooks.statusLine` entry, while `install.sh` writes a `statusLine.command` block (with an absolute path) into `~/.gemini/antigravity-cli/settings.json`. `install.sh` is the one users run.
+> **Install note:** `install.sh` writes a `statusLine.command` block into
+> `~/.gemini/antigravity-cli/settings.json` — that's the mechanism users run.
+> `plugin.json` also declares a `hooks.statusLine` entry for plugin managers.
