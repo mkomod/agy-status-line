@@ -103,4 +103,4 @@ The quota group follows the active model: `gemini-*` quotas for Gemini models,
 
 ## 📄 License
 
-[MIT](LICENSE) © Michael Komodromos
+Released under the [MIT License](LICENSE).
