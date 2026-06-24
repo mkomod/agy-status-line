@@ -1,0 +1,7 @@
+{
+  "name": "status-line",
+  "version": "1.0.0",
+  "hooks": {
+    "statusLine": "python3 status_line.py"
+  }
+}
